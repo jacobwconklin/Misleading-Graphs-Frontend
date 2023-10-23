@@ -1,6 +1,6 @@
 
 .SiteHeader {
-    background-color: seashell;
+    background-color: var(--dark-background);
     position: fixed;
     top: 0px;
     left: 0px;
@@ -9,6 +9,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
+    color: white;
 
     .logoHolder {
         width: 150px;

@@ -1,6 +1,11 @@
 # Misleading-Graphs-Frontend
 A Front-End for the Misleading Graphs Web Application. This application serves to help educate people about way data can be manipulated and misrepresented in graphs through interactive examples.
 
+## Tools in Use
+
+Using material component for improved design from https://ant.design/
+Using data visualization for graphs from https://www.chartjs.org/ (and specifically installed from) https://github.com/reactchartjs/react-chartjs-2
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).

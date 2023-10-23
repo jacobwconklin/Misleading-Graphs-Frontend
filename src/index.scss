@@ -1,0 +1,29 @@
+// Define global variables here
+:root {
+  --dark-background: #343840;
+  --light-background: #8FA685;
+  --neutral-background: #D9D8D2;
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+/* Color Theme Swatches in Hex from a random color pallette on adobe, we don't have to use these */
+.scatter-graph-1-hex { color: #343840; }
+.scatter-graph-2-hex { color: #8FA685; }
+.scatter-graph-3-hex { color: #D9D8D2; }
+.scatter-graph-4-hex { color: #A6483F; }
+.scatter-graph-5-hex { color: #D96055; }
+

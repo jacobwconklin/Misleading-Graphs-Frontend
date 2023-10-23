@@ -1,3 +1,5 @@
+import { Button } from 'antd';
+import ExampleGraph from './ExampleGraph';
 import './Graph.scss';
 
 // Holder for the entire graph component of the page. Will handle swapping in different 
@@ -7,7 +9,17 @@ const Graph = (props) => {
 
     return (
         <div className='Graph'>
-            Graph
+            <div className='controls'>
+                <Button  
+                    type="primary" 
+                    onClick={() => {alert("Clicked 1")}} 
+                >
+                    Button 1
+                </Button>
+            </div>
+            <div className='graphDisplay'>
+                <ExampleGraph />
+            </div>
         </div>
     )
 }

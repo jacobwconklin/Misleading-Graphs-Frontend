@@ -1,3 +1,5 @@
+// Pick whatever fonts we want through: https://fonts.google.com/
+@import url('https://fonts.googleapis.com/css2?family=Ovo&family=PT+Serif+Caption&family=Roboto&display=swap');
 // Define global variables here
 :root {
   --dark-background: #343840;
@@ -7,7 +9,7 @@
 
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+  font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -15,9 +17,10 @@ body {
   overflow-x: hidden;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+// Set any common css patterns here
+h1 {
+  font-family: 'Pt Serif Caption';
+  font-weight: 400;
 }
 
 /* Color Theme Swatches in Hex from a random color pallette on adobe, we don't have to use these */

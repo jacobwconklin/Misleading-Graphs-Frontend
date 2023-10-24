@@ -18,10 +18,13 @@
         justify-content: center;
         height: 80px;
         overflow: hidden;
-
+        &:hover {
+            cursor: pointer;
+        }
         
         .logoImage {
             height: 100px;
+            pointer-events: none;
         }
     }
 

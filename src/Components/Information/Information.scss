@@ -4,6 +4,12 @@
     background-color: var(--light-background);
     text-align: center;
 
+    .lineBreak {
+        width: 100%;
+        height: 5px;
+        background-color: black;
+    }
+
     .infoSection {
         display: flex;
         align-items: flex-start;
@@ -18,6 +24,8 @@
         .infoImage {
             height: 200px;
             width: auto;
+            padding: 20px;
+            max-width: 50%;
         }
     }
 }

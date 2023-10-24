@@ -56,8 +56,10 @@ const Graph = (props) => {
   }
 
   return (
-      <div className='Graph'>
+      <div className='Graph' id='graph'>
           <h1 className='tryMessage'>Try For Yourself!</h1>
+          <p className='tryMessage'>Use the techniques you have learned to avoid to make a graph that seems to suggest something the data doesn't support.</p>
+          <br></br>
           <div className='controls'>
               <Dropdown menu={{ items: graphTypes, onClick: selectGraphType }} placement="bottomLeft">
                   <Button>Graph Type</Button>

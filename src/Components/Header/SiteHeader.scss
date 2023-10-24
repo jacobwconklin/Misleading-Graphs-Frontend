@@ -12,7 +12,7 @@
     color: white;
 
     .logoHolder {
-        width: 150px;
+        width: 170px;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -29,10 +29,22 @@
     }
 
     .actions {
-        width: 150px;
+        width: 170px;
         display: flex;
         align-items: center;
-        justify-content: center;
+        text-wrap: wrap;
+    }
+
+    .actions > * {
+        font-weight: 400;
+        padding: 10px 5px 10px 5px;
+        border-radius: 5%;
+
+        &:hover {
+            cursor: pointer;
+            background-color: white;
+            color: black;
+        }
     }
 
 }

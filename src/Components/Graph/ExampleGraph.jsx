@@ -59,7 +59,7 @@ const ExampleGraph = (props) => {
     
 
     return (
-        <div className='ExampleGraph' style={{maxWidth: '100%', maxHeight: '60vh'}}>
+        <div className='ExampleGraph graphHolder'>
             <Bar options={options} data={data} />
         </div>
     )

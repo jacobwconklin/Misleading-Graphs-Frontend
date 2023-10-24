@@ -11,6 +11,11 @@ const SiteHeader = (props) => {
             </div>
             <h1>Misleading Graphs</h1>
             <div className='actions'>
+                <h3
+                    onClick={() => {
+                        document.getElementById("graph").scrollIntoView({ block: 'end',  behavior: 'smooth' });
+                    }}
+                >Jump to Graph</h3>
 
             </div>
         </div>

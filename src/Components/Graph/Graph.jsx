@@ -5,13 +5,22 @@ import DynamicGraph from './DynamicGraph';
 
 // For datasets
 import {csv} from "d3";
-import noodle_data_url from "../../Assets/Datasets/instant-noodle-demand.csv";
-import pet_data_url from "../../Assets/Datasets/pet-ownership-uk.csv";
-import soccer_data_url from "../../Assets/Datasets/number-visitors-japan-dome.csv";
+
+import noodle_data_url_old from "../../Assets/Datasets/Old/instant-noodle-demand.csv";
+import pet_data_url_old from "../../Assets/Datasets/Old/pet-ownership-uk.csv";
+import soccer_data_url_old from "../../Assets/Datasets/Old/number-visitors-japan-dome.csv";
+
+
+import noodle_data_url from "../../Assets/Datasets/noodles.csv";
+import pet_data_url from "../../Assets/Datasets/cats_vs_dogs.csv";
+import soccer_data_url from "../../Assets/Datasets/Football Stadiums.csv";
 
 const noodle_data = await csv(noodle_data_url);
 const pet_data = await csv(pet_data_url);
 const soccer_data = await csv(soccer_data_url);
+// const noodle_data = await csv(noodle_data_url_old);
+// const pet_data = await csv(pet_data_url_old);
+// const soccer_data = await csv(soccer_data_url_old);
 
 
 // Holder for the entire graph component of the page. Will handle swapping in different 
@@ -23,17 +32,23 @@ const Graph = (props) => {
       {
         key: '1',
         label: "Instant Noodle Sales",
-        data: noodle_data
+        data: noodle_data,
+        xaxis: 0,
+        yaxis: 1
       },
       {
         key: '2',
         label: "Cat and Dog ownership",
-        data: pet_data
+        data: pet_data,
+        xaxis: 0,
+        yaxis: 1
       },
       {
         key: '3',
         label: "Soccer Stadiums Worldwide",
-        data: soccer_data
+        data: soccer_data,
+        xaxis: 0,
+        yaxis: 1
       },
   ];
 
@@ -55,6 +70,46 @@ const Graph = (props) => {
     else
     {
       setSecondDataset(dataSetOptionsPlusNone().find(set => set.key === key));
+    }
+  }
+
+  const selectXAxis = ({ key }, isFirst) => {
+
+    if (isFirst)
+    {
+      setFirstDataset((()=>{
+        const dataset = {...firstDataset};
+        dataset.xaxis = key;
+        return dataset;
+      })());
+    }
+    else
+    {
+      setSecondDataset((()=>{
+        const dataset = {...secondDataset};
+        dataset.xaxis = key;
+        return dataset;
+      })());
+    }
+  }
+
+  const selectYAxis = ({ key }, isFirst) => {
+
+    if (isFirst)
+    {
+      setFirstDataset((()=>{
+        const dataset = {...firstDataset};
+        dataset.yaxis = key;
+        return dataset;
+      })());
+    }
+    else
+    {
+      setSecondDataset((()=>{
+        const dataset ={...secondDataset};
+        dataset.yaxis = key;
+        return dataset;
+      })());
     }
   }
 
@@ -85,6 +140,14 @@ const Graph = (props) => {
     const [firstDataset, setFirstDataset] = React.useState(dataSetOptions[0]);
     const [secondDataset, setSecondDataset] = React.useState(dataSetOptions[1]);
 
+    const firstColumns = firstDataset.data.columns.map((v,i)=>{
+      return {key: i.toString(), label: v};
+    })
+    const secondColumns = secondDataset.data.columns.map((v,i)=>{
+      return {key: i.toString(), label: v};
+    })
+    
+
   return (
       <div className='Graph' id='graph'>
           <h1 className='tryMessage'>Try For Yourself!</h1>
@@ -98,17 +161,23 @@ const Graph = (props) => {
               <Dropdown menu={{ items: dataSetOptions, onClick: (value => selectDataset(value, true)) }} placement="bottomLeft">
                   <Button>First Dataset</Button>
               </Dropdown>
+              <Dropdown menu={{ items: firstColumns, onClick: ((value,i) => selectXAxis(value, true)) }} placement="bottomLeft">
+                  <Button>X Axes</Button>
+              </Dropdown>
+              <Dropdown menu={{ items: firstColumns, onClick: (value => selectYAxis(value, true)) }} placement="bottomLeft">
+                  <Button>Y Axes</Button>
+              </Dropdown>
               <div className='buttonSpacer'></div>
               <Dropdown menu={{ items: dataSetOptionsPlusNone(), onClick: (value => selectDataset(value, false)) }} placement="bottomLeft">
                   <Button>Second Dataset</Button>
               </Dropdown>
+              <Dropdown menu={{ items: secondColumns, onClick: (value => selectXAxis(value, false)) }} placement="bottomLeft">
+                  <Button>X Axes</Button>
+              </Dropdown>
+              <Dropdown menu={{ items: secondColumns, onClick: (value => selectYAxis(value, false)) }} placement="bottomLeft">
+                  <Button>Y Axes</Button>
+              </Dropdown>
               <div className='buttonSpacer'></div>
-              <Button  
-                  type="primary" 
-                  onClick={() => {alert("Clicked 1")}} 
-              >
-                  Button 1
-              </Button>
           </div>
           <p>
             Currently Selected: Graph Type: {graphType.label}, First Dataset: {firstDataset.label}, Second Dataset: {secondDataset.label}.

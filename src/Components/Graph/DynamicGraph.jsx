@@ -23,6 +23,8 @@ ChartJS.register(
   Legend
 );
 
+const maxNumberElements = 20;
+
 
 const DynamicGraph = (props) => {
 
@@ -99,7 +101,7 @@ const DynamicGraph = (props) => {
     const firstVals = props.firstDataset.data.map(v=>[v[firstXAxis], v[firstYAxis], false]);
     const secondVals = props.secondDataset.data.map(v=>[v[secondXAxis], v[secondYAxis], false]);
 
-    const labels = [];
+    let labels = [];
     for (const v1 of firstVals)
     {
       for (const v2 of secondVals)
@@ -113,8 +115,14 @@ const DynamicGraph = (props) => {
       }
     }
 
-    const firstData = firstVals.filter(v=>labels.includes(v[0])).map(v=>parseFloat(v[1])); 
-    const secondData = secondVals.filter(v=>labels.includes(v[0])).map(v=>parseFloat(v[1])); 
+    // trim labels
+    labels = labels.splice(0, maxNumberElements);
+
+    const firstData = firstVals.filter(v=>labels.includes(v[0])).map(v=>parseFloat(v[1])).splice(0, maxNumberElements);; 
+    const secondData = secondVals.filter(v=>labels.includes(v[0])).map(v=>parseFloat(v[1])).splice(0, maxNumberElements);; 
+
+    console.log(firstData);
+    console.log(secondData);
 
     if (firstData.length == 0 || secondData.length == 0 || firstData.includes(NaN) || secondData.includes(NaN))
     {
@@ -127,24 +135,40 @@ const DynamicGraph = (props) => {
             {
             label: props.firstDataset.label,
             data: firstData,
-            backgroundColor: 'rgba(255, 99, 132, 0.5)',
+            backgroundColor: 'rgba(255, 99, 132, 0.7)',
             },
             {
             label: props.secondDataset.label,
             data: secondData,
-            backgroundColor: 'rgba(53, 162, 235, 0.5)',
+            backgroundColor: 'rgba(53, 162, 235, 0.7)',
             },
         ],
     };
+
+    // Set min and max
+    options.scales = {
+      y: props.yScale
+    }
+
+    if (isNaN(props.yScale.min))
+    {
+      options.scales.y.min = 0
+    }
+    // if (isNaN(props.yScale.max))
+    // {
+    //   options.scales.y.max = Math.max(...[...firstData, ...secondData])
+    // }
+
+    console.log(options.scales)
+    
     
     if (error)
     {
       return (
-        <div style={{width:"80%", height:"600px", display:"flex",justifyContent:"center",alignItems:"center"}}>
+        <div style={{width:"100%", height:"400px", display:"flex",flexDirection:"column",justifyContent:"center",alignItems:"center", border:"2px solid black"}}>
           <h2>Please Update Axes</h2>
           <ul>
-            <li>Make sure the X Axes likely share values (e.g. years)</li>
-            <li>Make sure the Y Axes are numeric (e.g. population)</li>
+            <li>Make sure the X Axes likely share values (e.g. years, country)</li>
           </ul>
         </div>
       );

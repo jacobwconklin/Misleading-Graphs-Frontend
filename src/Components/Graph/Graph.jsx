@@ -1,6 +1,6 @@
 import { Button, Dropdown, Space, Input } from 'antd';
 import './Graph.scss';
-import React, { useEffect } from "react";
+import React from "react";
 import DynamicGraph from './DynamicGraph';
 
 // For datasets
@@ -113,7 +113,7 @@ const preprocess = function(ds, isFirst)
         label: data
       });
 
-      if (firstNumericY == -1)
+      if (firstNumericY === -1)
       {
         firstNumericY = i;
       }

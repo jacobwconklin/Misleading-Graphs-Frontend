@@ -41,61 +41,11 @@ const DynamicGraph = (props) => {
         },
       };
 
-    // const labels = ['January', 'February', 'March', 'April', 'May', 'June', 'July'];
     const firstXAxis = Object.values(props.firstDataset.data.columns)[props.firstDataset.xaxis];
     const firstYAxis = Object.values(props.firstDataset.data.columns)[props.firstDataset.yaxis];
     const secondXAxis = Object.values(props.secondDataset.data.columns)[props.secondDataset.xaxis];
     const secondYAxis = Object.values(props.secondDataset.data.columns)[props.secondDataset.yaxis];
-    // console.log(props.secondDataset)
 
-    // // Try to come up with the intersection of same years
-    // const unusedLabels = [];
-    // props.firstDataset.data.filter(date=>date.Year).map(date=>unusedLabels.push(date.Year));
-    // for (let d in props.secondDataset.data)
-    // {
-    //   let date = props.secondDataset.data[d];
-    //   if (date.Year)
-    //   {
-    //     let i = unusedLabels.indexOf(date.Year);
-    //     if (i != -1)
-    //     {
-    //       unusedLabels[i] = [date.Year];
-    //     }
-    //   }
-      
-    // }
-
-    // const labels = unusedLabels.filter((d)=>d.push).map(([date])=>date);
-
-    // // Now filter data
-    // const firstData = labels.map(l=>parseFloat(Object.values(props.firstDataset.data.find(d=>d.Year===l))[1]));
-    // const secondData = labels.map(l=>parseFloat(Object.values(props.secondDataset.data.find(d=>d.Year===l))[1]));
-
-    // Filter from x and y axes
-    // const unusedLabels = [];
-    // props.firstDataset.data.filter(v=>v[firstXAxis]).map(v=>unusedLabels.push(v[firstXAxis]));
-    // for (let i in props.secondDataset.data)
-    // {
-    //   let o = props.secondDataset.data[i];
-    //   if (o[firstXAxis])
-    //   {
-    //     const j = unusedLabels.indexOf(o[firstXAxis]);
-    //     if (j != -1)
-    //     {
-    //       console.log(j)
-    //       unusedLabels[j] = [o[firstXAxis]];
-    //     }
-    //   }
-    // }
-
-    // console.log(unusedLabels)
-
-    // const labels = unusedLabels.filter((d)=>d.push).map(([v])=>v);
-    // // Now filter data
-    // const firstData = labels.map(l=>parseFloat(Object.values(props.firstDataset.data.find(d=>d[firstXAxis]===l))[1]));
-    // const secondData = labels.map(l=>parseFloat(Object.values(props.secondDataset.data.find(d=>d[firstXAxis]===l))[1]));
-
-    const unusedLabels = [];
     let error = false;
 
     const firstVals = props.firstDataset.data.map(v=>[v[firstXAxis], v[firstYAxis], false]);
@@ -121,10 +71,7 @@ const DynamicGraph = (props) => {
     const firstData = firstVals.filter(v=>labels.includes(v[0])).map(v=>parseFloat(v[1])).splice(0, maxNumberElements);; 
     const secondData = secondVals.filter(v=>labels.includes(v[0])).map(v=>parseFloat(v[1])).splice(0, maxNumberElements);; 
 
-    console.log(firstData);
-    console.log(secondData);
-
-    if (firstData.length == 0 || secondData.length == 0 || firstData.includes(NaN) || secondData.includes(NaN))
+    if (firstData.length === 0 || secondData.length === 0 || firstData.includes(NaN) || secondData.includes(NaN))
     {
       error = true;
     }
@@ -159,8 +106,6 @@ const DynamicGraph = (props) => {
     //   options.scales.y.max = Math.max(...[...firstData, ...secondData])
     // }
 
-    console.log(options.scales)
-    
     
     if (error)
     {

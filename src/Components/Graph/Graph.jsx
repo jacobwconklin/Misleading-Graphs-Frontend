@@ -1,31 +1,38 @@
 import { Button, Dropdown, Space, Input } from 'antd';
 import './Graph.scss';
-import React from "react";
+import React, { useState } from "react";
 import DynamicGraph from './DynamicGraph';
+import xmark from '../../Assets/Site/xmark.svg';
 
 // For datasets
 import {csv} from "d3";
 
-import noodle_data_url_old from "../../Assets/Datasets/Old/instant-noodle-demand.csv";
+// import noodle_data_url_old from "../../Assets/Datasets/Old/instant-noodle-demand.csv";
 import pet_data_url_old from "../../Assets/Datasets/Old/pet-ownership-uk.csv";
-import soccer_data_url_old from "../../Assets/Datasets/Old/number-visitors-japan-dome.csv";
+// import soccer_data_url_old from "../../Assets/Datasets/Old/number-visitors-japan-dome.csv";
 
 
 import noodle_data_url from "../../Assets/Datasets/noodles.csv";
 import pet_data_url from "../../Assets/Datasets/cats_vs_dogs.csv";
 import soccer_data_url from "../../Assets/Datasets/Football Stadiums.csv";
+import imdb_data_url from "../../Assets/Datasets/imdb_top_1000.csv";
+import ufo_data_url from "../../Assets/Datasets/ufo-sightings-transformed.csv";
 
 const noodle_data = await csv(noodle_data_url);
-const pet_data = await csv(pet_data_url);
+//const pet_data = await csv(pet_data_url);
 const soccer_data = await csv(soccer_data_url);
+const imdb_data = await csv(imdb_data_url);
+const ufo_data = await csv(ufo_data_url);
 // const noodle_data = await csv(noodle_data_url_old);
-// const pet_data = await csv(pet_data_url_old);
+const pet_data = await csv(pet_data_url_old);
 // const soccer_data = await csv(soccer_data_url_old);
 
 let datasets = [
   [noodle_data, "Instant Noodle Sales"],
   [pet_data, "Cat and Dog ownership"],
-  [soccer_data, "Soccer Stadiums Worldwide"]
+  [soccer_data, "Soccer Stadiums Worldwide"],
+  [imdb_data, "Imdb Top Movies"],
+  [ufo_data, "Ufo Sightings"]
 ]
 
 // Preprocess datasets
@@ -80,6 +87,10 @@ const Graph = (props) => {
   //       yaxis: 1
   //     },
   // ];
+
+  // state variable for adding to removed values from x axis
+  const [removedValues, setRemovedValues] = useState([]);
+  const [valueToRemove, setValueToRemove] = useState("");
 
   const dataSetOptions = datasets.map((ds,i)=>{
     return {
@@ -287,13 +298,62 @@ const preprocess = function(ds, isFirst)
                 >
                     <Button>Y Axes: {secondDataset ? secondColumns[secondDataset.yaxis].label : 'NONE'}</Button>
                 </Dropdown>
+                <Button 
+
+                >
+                  Remove Data Point
+                </Button>
               </div>
-              <div>
-                <Space direction="vertical">
-                  <div><h3>Custom Y Scale:</h3></div>
-                  <div>Min: <Input placeholder="Leave Blank for Default" onInput={e=>setYScaleHelper(e.target.value, true)} /></div>
-                  <div>Max: <Input placeholder="Leave Blank for Default" onInput={e=>setYScaleHelper(e.target.value, false)} /></div>
-                </Space>
+              <div className='scale-and-cherrypicking-modifiers'>
+                <div>
+                  <Space direction="vertical">
+                    <div><h3>Custom Y Scale:</h3></div>
+                    <div>Min: <Input placeholder="Leave Blank for Default" onInput={e=>setYScaleHelper(e.target.value, true)} /></div>
+                    <div>Max: <Input placeholder="Leave Blank for Default" onInput={e=>setYScaleHelper(e.target.value, false)} /></div>
+                  </Space>
+                </div>
+                <div>
+                  <Space direction="vertical">
+                    <div><h3>Remove Data Points:</h3></div>
+                    <div className='input-and-button-row'>
+                      <Input 
+                        placeholder="Type Value From X Axis" 
+                        onInput={e=>setValueToRemove(e.target.value)} 
+                        value={valueToRemove}
+                      />
+                      <Button 
+                        disabled={!valueToRemove}
+                        onClick={() => {
+                          const newRemovedValues = removedValues;
+                          newRemovedValues.push(valueToRemove);
+                          setRemovedValues(newRemovedValues);
+                          setValueToRemove("");
+                        }}
+                      >
+                        Remove
+                      </Button>
+                    </div>
+                    <div className='removed-datapoints'>
+                      {
+                        // <span className='removed-datapoint'>
+                        //   1999
+                        //   <img src={xmark} alt='Delete removed data point' className='remove-icon' />
+                        // </span>
+                        
+                        removedValues.map(removedValue => (
+                          <span className='removed-datapoint'
+                            onClick={() => {
+                              setRemovedValues(currValues => currValues.filter(value => value !== removedValue));
+                            }}
+                          >
+                            {removedValue}
+                            <img src={xmark} alt='Delete removed data point' className='remove-icon' />
+                          </span>
+                        ))
+                      }
+                    </div>
+                  </Space>
+                </div>
               </div>
             </Space>
           </div> 
@@ -303,6 +363,7 @@ const preprocess = function(ds, isFirst)
                 firstDataset={firstDataset}
                 secondDataset={secondDataset}
                 yScale={yScale}
+                removedValues={removedValues}
                 />
           </div>
       </div>

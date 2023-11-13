@@ -25,7 +25,7 @@ ChartJS.register(
 
 const maxNumberElements = 20;
 
-// TODO ideas: add in ufo and imdb data, limit choices for x-axis, allow users to play with only one dataset if desired, 
+// TODO ideas:  limit choices for x-axis
 // allow users to remove specific data points / select only specific data points if they would
 
 const DynamicGraph = (props) => {
@@ -56,8 +56,10 @@ const DynamicGraph = (props) => {
         let labels = [];
         for (const v1 of firstVals)
         {
-          labels.push(v1[0]);
-          v1[2] = true;
+          if (!props.removedValues.includes(v1[0])) {
+            labels.push(v1[0]);
+            v1[2] = true;
+          }
         }
   
         // trim labels
@@ -83,11 +85,13 @@ const DynamicGraph = (props) => {
       } else {
         // supply both first and second data sets
         const firstXAxis = Object.values(props.firstDataset.data.columns)[props.firstDataset.xaxis];
+        console.log(firstXAxis);
         const firstYAxis = Object.values(props.firstDataset.data.columns)[props.firstDataset.yaxis];
         const secondXAxis = Object.values(props.secondDataset.data.columns)[props.secondDataset.xaxis];
         const secondYAxis = Object.values(props.secondDataset.data.columns)[props.secondDataset.yaxis];
   
         const firstVals = props.firstDataset.data.map(v=>[v[firstXAxis], v[firstYAxis], false]);
+        console.log(firstVals);
         const secondVals = props.secondDataset.data.map(v=>[v[secondXAxis], v[secondYAxis], false]);
   
         let labels = [];
@@ -95,7 +99,7 @@ const DynamicGraph = (props) => {
         {
           for (const v2 of secondVals)
           {
-            if (v1[0] === v2[0] && (!v1[2] && !v2[2]))
+            if (v1[0] === v2[0] && (!v1[2] && !v2[2]) && !props.removedValues.includes(v1[0]) )
             {
               labels.push(v1[0]);
               v1[2] = true;

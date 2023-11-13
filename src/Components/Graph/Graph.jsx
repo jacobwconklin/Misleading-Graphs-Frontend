@@ -135,10 +135,14 @@ const preprocess = function(ds, isFirst)
     // second data set
     // alert("Selected Dataset type: " + dataSetOptionsPlusNone().find(set => set.key === key).label + " for your " + 
     //   (isFirst ? "first" : "second" ) + " dataset.");
-
     if (isFirst)
     {
       setFirstDataset(preprocess(dataSetOptionsPlusNone().find(set => set.key === key), true));
+    }
+    else if (key === '0') 
+    {
+      // user selected 'NONE' as their second database no processesing work needed
+      setSecondDataset(null);
     }
     else
     {
@@ -238,7 +242,7 @@ const preprocess = function(ds, isFirst)
     const firstColumns = firstDataset.data.columns.map((v,i)=>{
       return {key: i.toString(), label: v};
     })
-    const secondColumns = secondDataset.data.columns.map((v,i)=>{
+    const secondColumns = secondDataset === null ? null : secondDataset.data.columns.map((v,i)=>{
       return {key: i.toString(), label: v};
     })
   
@@ -267,13 +271,21 @@ const preprocess = function(ds, isFirst)
               </div>
               <div>
                 <Dropdown menu={{ items: dataSetOptionsPlusNone(), onClick: (value => selectDataset(value, false)) }} placement="bottomLeft">
-                    <Button>Second Dataset: {secondDataset.label}</Button>
+                    <Button>Second Dataset: {secondDataset ? secondDataset.label : 'NONE'}</Button>
                 </Dropdown>
-                <Dropdown menu={{ items: secondColumns, onClick: (value => selectXAxis(value, false)) }} placement="bottomLeft">
-                    <Button>X Axes: {secondColumns[secondDataset.xaxis].label}</Button>
+                <Dropdown 
+                  menu={{ items: secondColumns, onClick: (value => selectXAxis(value, false)) }} 
+                  placement="bottomLeft"
+                  disabled={!secondDataset}  
+                >
+                    <Button>X Axes: {secondDataset ? secondColumns[secondDataset.xaxis].label : 'NONE'}</Button>
                 </Dropdown>
-                <Dropdown menu={{ items: secondDataset.yaxes, onClick: (value => selectYAxis(value, false)) }} placement="bottomLeft">
-                    <Button>Y Axes: {secondColumns[secondDataset.yaxis].label}</Button>
+                <Dropdown 
+                  menu={{ items: secondDataset? secondDataset.yaxes : [], onClick: (value => selectYAxis(value, false)) }} 
+                  placement="bottomLeft"
+                  disabled={!secondDataset}  
+                >
+                    <Button>Y Axes: {secondDataset ? secondColumns[secondDataset.yaxis].label : 'NONE'}</Button>
                 </Dropdown>
               </div>
               <div>

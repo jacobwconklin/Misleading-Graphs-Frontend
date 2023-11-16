@@ -23,8 +23,6 @@ ChartJS.register(
   Legend
 );
 
-const maxNumberElements = 20;
-
 // TODO ideas:  limit choices for x-axis
 // allow users to remove specific data points / select only specific data points if they would
 
@@ -63,9 +61,11 @@ const DynamicGraph = (props) => {
         }
   
         // trim labels
-        labels = labels.splice(0, maxNumberElements);
+        labels = labels.splice(0, props.maximumDataPoints);
+        // order labels
+        labels = labels.sort();
   
-        const firstData = firstVals.filter(v=>labels.includes(v[0])).map(v=>parseFloat(v[1])).splice(0, maxNumberElements);; 
+        const firstData = firstVals.filter(v=>labels.includes(v[0])).map(v=>parseFloat(v[1])).splice(0, props.maximumDataPoints);; 
   
         if (firstData.length === 0 || firstData.includes(NaN))
         {
@@ -109,10 +109,10 @@ const DynamicGraph = (props) => {
         }
   
         // trim labels
-        labels = labels.splice(0, maxNumberElements);
+        labels = labels.splice(0, props.maximumDataPoints);
   
-        const firstData = firstVals.filter(v=>labels.includes(v[0])).map(v=>parseFloat(v[1])).splice(0, maxNumberElements);; 
-        const secondData = secondVals.filter(v=>labels.includes(v[0])).map(v=>parseFloat(v[1])).splice(0, maxNumberElements);; 
+        const firstData = firstVals.filter(v=>labels.includes(v[0])).map(v=>parseFloat(v[1])).splice(0, props.maximumDataPoints);; 
+        const secondData = secondVals.filter(v=>labels.includes(v[0])).map(v=>parseFloat(v[1])).splice(0, props.maximumDataPoints);; 
   
         if (firstData.length === 0 || firstData.includes(NaN) || secondData.length === 0 || secondData.includes(NaN))
         {

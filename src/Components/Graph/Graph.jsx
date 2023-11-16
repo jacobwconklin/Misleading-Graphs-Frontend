@@ -13,16 +13,16 @@ import pet_data_url_old from "../../Assets/Datasets/Old/pet-ownership-uk.csv";
 
 
 import noodle_data_url from "../../Assets/Datasets/noodles.csv";
-import pet_data_url from "../../Assets/Datasets/cats_vs_dogs.csv";
+// import pet_data_url from "../../Assets/Datasets/cats_vs_dogs.csv";
 import soccer_data_url from "../../Assets/Datasets/Football Stadiums.csv";
 import imdb_data_url from "../../Assets/Datasets/imdb_top_1000.csv";
-import ufo_data_url from "../../Assets/Datasets/ufo-sightings-transformed.csv";
+// import ufo_data_url from "../../Assets/Datasets/ufo-sightings-transformed.csv";
 
 const noodle_data = await csv(noodle_data_url);
 //const pet_data = await csv(pet_data_url);
 const soccer_data = await csv(soccer_data_url);
 const imdb_data = await csv(imdb_data_url);
-const ufo_data = await csv(ufo_data_url);
+// const ufo_data = await csv(ufo_data_url);
 // const noodle_data = await csv(noodle_data_url_old);
 const pet_data = await csv(pet_data_url_old);
 // const soccer_data = await csv(soccer_data_url_old);
@@ -32,7 +32,6 @@ let datasets = [
   [pet_data, "Cat and Dog ownership"],
   [soccer_data, "Soccer Stadiums Worldwide"],
   [imdb_data, "Imdb Top Movies"],
-  [ufo_data, "Ufo Sightings"]
 ]
 
 // Preprocess datasets
@@ -87,6 +86,9 @@ const Graph = (props) => {
   //       yaxis: 1
   //     },
   // ];
+
+  // state variable for maximum number of datapoints to display
+  const [maximumDataPoints, setMaximumDataPoints] = useState(15);
 
   // state variable for adding to removed values from x axis
   const [removedValues, setRemovedValues] = useState([]);
@@ -233,7 +235,7 @@ const preprocess = function(ds, isFirst)
     // State
     const [graphType, setGraphType] = React.useState(graphTypes[0]);
     const [firstDataset, setFirstDataset] = React.useState(preprocess(dataSetOptions[0]));
-    const [secondDataset, setSecondDataset] = React.useState(preprocess(dataSetOptions[1]));
+    const [secondDataset, setSecondDataset] = React.useState(null);
     const [yScale, setYScale] = React.useState({min: NaN, max: NaN});
 
     const setYScaleHelper = function (value, isMin)
@@ -266,9 +268,17 @@ const preprocess = function(ds, isFirst)
           <div className='controls'>
             <Space direction="vertical">
               <div><h3>Data settings:</h3></div>
-              <Dropdown menu={{ items: graphTypes, onClick: selectGraphType }} placement="bottomLeft">
-                  <Button>Graph Type: {graphType.label}</Button>
-              </Dropdown>
+              <div className='graph-type-and-maximum-data-points'>
+                <Dropdown menu={{ items: graphTypes, onClick: selectGraphType }} placement="bottomLeft">
+                    <Button>Graph Type: {graphType.label}</Button>
+                </Dropdown>
+                <Input 
+                  className='maximum-data-points'
+                  type='number'
+                  onInput={e=>setMaximumDataPoints( e.target.value < 1 ? 1 : (e.target.value > 40 ? 40 : ~~(e.target.value)))} 
+                  value={maximumDataPoints}
+                />
+              </div>
               <div>
                 <Dropdown menu={{ items: dataSetOptions, onClick: (value => selectDataset(value, true)) }} placement="bottomLeft">
                     <Button>First Dataset: {firstDataset.label}</Button>
@@ -298,11 +308,6 @@ const preprocess = function(ds, isFirst)
                 >
                     <Button>Y Axes: {secondDataset ? secondColumns[secondDataset.yaxis].label : 'NONE'}</Button>
                 </Dropdown>
-                <Button 
-
-                >
-                  Remove Data Point
-                </Button>
               </div>
               <div className='scale-and-cherrypicking-modifiers'>
                 <div>
@@ -334,12 +339,7 @@ const preprocess = function(ds, isFirst)
                       </Button>
                     </div>
                     <div className='removed-datapoints'>
-                      {
-                        // <span className='removed-datapoint'>
-                        //   1999
-                        //   <img src={xmark} alt='Delete removed data point' className='remove-icon' />
-                        // </span>
-                        
+                      { 
                         removedValues.map(removedValue => (
                           <span className='removed-datapoint'
                             onClick={() => {
@@ -364,7 +364,8 @@ const preprocess = function(ds, isFirst)
                 secondDataset={secondDataset}
                 yScale={yScale}
                 removedValues={removedValues}
-                />
+                maximumDataPoints={maximumDataPoints}
+              />
           </div>
       </div>
   )

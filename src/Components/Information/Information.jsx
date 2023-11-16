@@ -105,7 +105,7 @@ const Information = (props) => {
                         onClick={() => setTechniqueOneOpen(currValue => !currValue)}
                     >
                         <img className='collapseExpand' src={techniqueOneOpen ? chevronBottom : chevronTop} alt='collapse or expand '/>
-                        <h2>Obfuscated Correlation or spurious relationship</h2>
+                        <h2>Hidden Correlation or spurious relationship</h2>
                     </div>
                     <p style={{display: techniqueOneOpen ? 'block' : 'none'}}>
                         Two separate and unrelated data sets may appear to have ups and downs that coincide. This can give the impression that there  

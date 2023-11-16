@@ -69,4 +69,12 @@
         padding-left: 5px;
         padding-top: 2px;
     }
+
+    .graph-type-and-maximum-data-points {
+        display: flex;
+    }
+
+    .maximum-data-points {
+        max-width: 100px;
+    }
 }

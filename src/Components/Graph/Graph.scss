@@ -2,6 +2,10 @@
 .Graph {
     padding: 20px 0px 20px 0px;
 
+    .ant-input-group-addon {
+        background-color: white;
+    }
+
     p {
         text-align: center;
     }
@@ -30,8 +34,68 @@
     // all graphs should be wrapped in a div with class graphHolder
     .graphHolder {
         display: flex;
-        justify-content: center;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
         max-width: 100%;
         max-height: 60vh;
+    }
+
+    .scale-and-cherrypicking-modifiers {
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+    }
+
+    .input-and-button-row {
+        display: flex;
+    }
+
+    .removed-datapoint {
+        background-color: white;
+        border: 1px solid lightgray;
+        border-radius: 15%;
+        padding: 2px;
+
+        &:hover {
+            background-color: lightcoral;
+            cursor: pointer;
+        }
+    }
+
+    .removed-datapoints {
+        max-width: 260px;
+        display: flex;
+        flex-wrap: wrap;
+    }
+
+    .remove-icon {
+        width: 15px;
+        height: 15px;
+        padding-left: 5px;
+        padding-top: 2px;
+    }
+
+    .graph-type-and-maximum-data-points {
+        display: flex;
+    }
+
+    .maximum-data-points {
+        max-width: 300px;
+    }
+
+    .scale-data-points {
+        max-width: 150px;
+    }
+
+    .save-button-holder {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 15px;
+    }
+
+    .save-button-holder > * {
+        margin: 10px;
     }
 }

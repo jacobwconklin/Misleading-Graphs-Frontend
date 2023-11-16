@@ -1,7 +1,6 @@
 // we can componetize different kinds of graphs if it makes it easier to pass information in 
 // via props, or the graph component may be able to simply swap between them. this is just 
 // an example graph from chart.js to show something
-import React from 'react';
 import 'chart.js/auto';
 import {
   Chart as ChartJS,
@@ -23,6 +22,8 @@ ChartJS.register(
   Legend
 );
 
+// TODO ideas:  limit choices for x-axis
+// allow users to remove specific data points / select only specific data points if they would
 
 const DynamicGraph = (props) => {
 
@@ -39,112 +40,125 @@ const DynamicGraph = (props) => {
         },
       };
 
-    // const labels = ['January', 'February', 'March', 'April', 'May', 'June', 'July'];
-    const firstXAxis = Object.values(props.firstDataset.data.columns)[props.firstDataset.xaxis];
-    const firstYAxis = Object.values(props.firstDataset.data.columns)[props.firstDataset.yaxis];
-    const secondXAxis = Object.values(props.secondDataset.data.columns)[props.secondDataset.xaxis];
-    const secondYAxis = Object.values(props.secondDataset.data.columns)[props.secondDataset.yaxis];
-    // console.log(props.secondDataset)
-
-    // // Try to come up with the intersection of same years
-    // const unusedLabels = [];
-    // props.firstDataset.data.filter(date=>date.Year).map(date=>unusedLabels.push(date.Year));
-    // for (let d in props.secondDataset.data)
-    // {
-    //   let date = props.secondDataset.data[d];
-    //   if (date.Year)
-    //   {
-    //     let i = unusedLabels.indexOf(date.Year);
-    //     if (i != -1)
-    //     {
-    //       unusedLabels[i] = [date.Year];
-    //     }
-    //   }
-      
-    // }
-
-    // const labels = unusedLabels.filter((d)=>d.push).map(([date])=>date);
-
-    // // Now filter data
-    // const firstData = labels.map(l=>parseFloat(Object.values(props.firstDataset.data.find(d=>d.Year===l))[1]));
-    // const secondData = labels.map(l=>parseFloat(Object.values(props.secondDataset.data.find(d=>d.Year===l))[1]));
-
-    // Filter from x and y axes
-    // const unusedLabels = [];
-    // props.firstDataset.data.filter(v=>v[firstXAxis]).map(v=>unusedLabels.push(v[firstXAxis]));
-    // for (let i in props.secondDataset.data)
-    // {
-    //   let o = props.secondDataset.data[i];
-    //   if (o[firstXAxis])
-    //   {
-    //     const j = unusedLabels.indexOf(o[firstXAxis]);
-    //     if (j != -1)
-    //     {
-    //       console.log(j)
-    //       unusedLabels[j] = [o[firstXAxis]];
-    //     }
-    //   }
-    // }
-
-    // console.log(unusedLabels)
-
-    // const labels = unusedLabels.filter((d)=>d.push).map(([v])=>v);
-    // // Now filter data
-    // const firstData = labels.map(l=>parseFloat(Object.values(props.firstDataset.data.find(d=>d[firstXAxis]===l))[1]));
-    // const secondData = labels.map(l=>parseFloat(Object.values(props.secondDataset.data.find(d=>d[firstXAxis]===l))[1]));
-
-    const unusedLabels = [];
     let error = false;
 
-    const firstVals = props.firstDataset.data.map(v=>[v[firstXAxis], v[firstYAxis], false]);
-    const secondVals = props.secondDataset.data.map(v=>[v[secondXAxis], v[secondYAxis], false]);
-
-    const labels = [];
-    for (const v1 of firstVals)
-    {
-      for (const v2 of secondVals)
-      {
-        if (v1[0] === v2[0] && (!v1[2] && !v2[2]))
+    const getData = () => {
+      if (props.secondDataset === null) {
+        // only supply FIRST data set 
+        const firstXAxis = Object.values(props.firstDataset.data.columns)[props.firstDataset.xaxis];
+        const firstYAxis = Object.values(props.firstDataset.data.columns)[props.firstDataset.yaxis];
+  
+        const firstVals = props.firstDataset.data.filter(v => !props.removedValues.includes(v[firstXAxis]))
+          .map(v=>[v[firstXAxis], v[firstYAxis] * props.firstScale, false]);
+  
+        let labels = [];
+        for (const v1 of firstVals)
         {
           labels.push(v1[0]);
           v1[2] = true;
-          v2[2] = true;
         }
+  
+        // trim labels
+        labels = labels.splice(0, props.maximumDataPoints);
+        // order labels
+        labels = labels.sort();
+  
+        const firstData = firstVals.filter(v=>labels.includes(v[0])).map(v=> parseFloat(v[1])).splice(0, props.maximumDataPoints);; 
+  
+        if (firstData.length === 0 || firstData.includes(NaN))
+        {
+          error = true;
+        }
+
+        return {
+          labels,
+          datasets: [
+            {
+              label: props.firstDataset.label,
+              data: firstData,
+              backgroundColor: 'rgba(255, 99, 132, 0.7)',
+            },
+          ],
+        };
+      } else {
+        // supply both first and second data sets
+        const firstXAxis = Object.values(props.firstDataset.data.columns)[props.firstDataset.xaxis];
+        const firstYAxis = Object.values(props.firstDataset.data.columns)[props.firstDataset.yaxis];
+        const secondXAxis = Object.values(props.secondDataset.data.columns)[props.secondDataset.xaxis];
+        const secondYAxis = Object.values(props.secondDataset.data.columns)[props.secondDataset.yaxis];
+  
+        const firstVals = props.firstDataset.data.filter(v => !props.removedValues.includes(v[firstXAxis]))
+          .map(v=>[v[firstXAxis], v[firstYAxis] * props.firstScale, false]);
+        const secondVals = props.secondDataset.data.map(v=>[v[secondXAxis], v[secondYAxis] * props.secondScale, false]);
+  
+        let labels = [];
+        for (const v1 of firstVals)
+        {
+          for (const v2 of secondVals)
+          {
+            if (v1[0] === v2[0] && (!v1[2] && !v2[2]) )
+            {
+              labels.push(v1[0]);
+              v1[2] = true;
+              v2[2] = true;
+            }
+          }
+        }
+  
+        // trim labels
+        labels = labels.splice(0, props.maximumDataPoints);
+        // order labels
+        labels = labels.sort((a, b) => a < b);
+  
+        const firstData = firstVals.filter(v=>labels.includes(v[0])).sort((a, b) => a[0] < b[0]).map(v=>parseFloat(v[1])); 
+        const secondData = secondVals.filter(v=>labels.includes(v[0])).sort((a, b) => a[0] < b[0]).map(v=>parseFloat(v[1])); 
+  
+        if (firstData.length === 0 || firstData.includes(NaN) || secondData.length === 0 || secondData.includes(NaN))
+        {
+          error = true;
+        }
+
+        
+
+        return {
+          labels,
+          datasets: [
+            {
+              label: props.firstDataset.label,
+              data: firstData,
+              backgroundColor: 'rgba(255, 99, 132, 0.7)',
+            },
+            {
+              label: props.secondDataset.label,
+              data: secondData,
+              backgroundColor: 'rgba(53, 162, 235, 0.7)',
+            },
+          ],
+        };
       }
     }
 
-    const firstData = firstVals.filter(v=>labels.includes(v[0])).map(v=>parseFloat(v[1])); 
-    const secondData = secondVals.filter(v=>labels.includes(v[0])).map(v=>parseFloat(v[1])); 
-
-    if (firstData.length == 0 || secondData.length == 0 || firstData.includes(NaN) || secondData.includes(NaN))
-    {
-      error = true;
+    // Set min and max
+    options.scales = {
+      y: props.yScale
     }
 
-    const data = {
-        labels,
-        datasets: [
-            {
-            label: props.firstDataset.label,
-            data: firstData,
-            backgroundColor: 'rgba(255, 99, 132, 0.5)',
-            },
-            {
-            label: props.secondDataset.label,
-            data: secondData,
-            backgroundColor: 'rgba(53, 162, 235, 0.5)',
-            },
-        ],
-    };
+    if (isNaN(props.yScale.min))
+    {
+      options.scales.y.min = 0
+    }
+    // if (isNaN(props.yScale.max))
+    // {
+    //   options.scales.y.max = Math.max(...[...firstData, ...secondData])
+    // 
     
     if (error)
     {
       return (
-        <div style={{width:"80%", height:"600px", display:"flex",justifyContent:"center",alignItems:"center"}}>
+        <div style={{width:"100%", height:"400px", display:"flex",flexDirection:"column",justifyContent:"center",alignItems:"center", border:"2px solid black"}}>
           <h2>Please Update Axes</h2>
           <ul>
-            <li>Make sure the X Axes likely share values (e.g. years)</li>
-            <li>Make sure the Y Axes are numeric (e.g. population)</li>
+            <li>Make sure the X Axes likely share values (e.g. years, country)</li>
           </ul>
         </div>
       );
@@ -153,7 +167,7 @@ const DynamicGraph = (props) => {
     {
       return (
         <div className='ExampleGraph graphHolder'>
-            <Bar options={options} data={data} />
+            <Bar options={options} data={getData()} ref={props.graphRef} />
         </div>
     )
     }
@@ -161,7 +175,7 @@ const DynamicGraph = (props) => {
     {
       return (
         <div className='ExampleGraph graphHolder'>
-            <Pie options={options} data={data} />
+            <Pie options={options} data={getData()} ref={props.graphRef} />
         </div>
     )
     }
@@ -169,7 +183,7 @@ const DynamicGraph = (props) => {
     {
       return (
         <div className='ExampleGraph graphHolder'>
-            <Scatter options={options} data={data} />
+            <Scatter options={options} data={getData()} ref={props.graphRef} />
         </div>
     )
     }

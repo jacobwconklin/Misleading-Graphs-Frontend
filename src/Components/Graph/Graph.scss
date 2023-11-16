@@ -2,6 +2,10 @@
 .Graph {
     padding: 20px 0px 20px 0px;
 
+    .ant-input-group-addon {
+        background-color: white;
+    }
+
     p {
         text-align: center;
     }
@@ -75,6 +79,10 @@
     }
 
     .maximum-data-points {
-        max-width: 100px;
+        max-width: 300px;
+    }
+
+    .scale-data-points {
+        max-width: 150px;
     }
 }

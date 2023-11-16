@@ -3,7 +3,8 @@ import proliferation from '../../Assets/Site/misleading-graph-proliferation.jpg'
 import socialMedia from '../../Assets/Site/socialMediaNews.webp';
 import grabPieChart from '../../Assets/Site/grabbing-pie-chart.svg';
 import sharkVsIcecream from '../../Assets/Examples/icecreamVsSharks2.png';
-import badDoubleAxis from '../../Assets/Examples/drowningVsMarriage.png';
+// import badDoubleAxis from '../../Assets/Examples/drowningVsMarriage.png';
+import stretchedScale from '../../Assets/Examples/Bush-cuts-stretched-scale.png';
 import cherryPicked from '../../Assets/Examples/cherryPickedCooling.webp';
 import nonCherryPicked from '../../Assets/Examples/NotCherryPickedWarming.webp';
 import chevronTop from '../../Assets/Site/chevron-top.svg';
@@ -105,7 +106,7 @@ const Information = (props) => {
                         onClick={() => setTechniqueOneOpen(currValue => !currValue)}
                     >
                         <img className='collapseExpand' src={techniqueOneOpen ? chevronBottom : chevronTop} alt='collapse or expand '/>
-                        <h2>Hidden Correlation or spurious relationship</h2>
+                        <h2>Hidden Correlations or spurious relationships</h2>
                     </div>
                     <p style={{display: techniqueOneOpen ? 'block' : 'none'}}>
                         Two separate and unrelated data sets may appear to have ups and downs that coincide. This can give the impression that there  
@@ -134,7 +135,16 @@ const Information = (props) => {
                     <p style={{display: techniqueTwoOpen ? 'block' : 'none'}}>
                         The act of only choosing select data points that fit a narritive or align in a certain pattern. Any data with 
                         some fluctuations will have periods that go against the overall trend of the data, and by focusing on these 
-                        outliers the wrong conclusions can be drawn. 
+                        outliers the wrong conclusions can be drawn. This can easily done in the graphs you create below by removing 
+                        values that do not correspond with the conclusion your graph supports. Although there are legitamate reasons
+                        to ignore outliers based on data collection error or unrelated circumstances, simply removing data points 
+                        at will to prove a point is disingenuous. Look out for graphs with seemingly random columns missing in the 
+                        data being reported. A strong correlation should be clear even with some data points that are less aligned with 
+                        the conclusion. In the graph labeled "Earth has cooled since 1998" you can see an example of cherry picking where 
+                        rather than removing a few unwanted values, the creator only selected values in a very small range from 2002 to 
+                        2008. This gives the impression of global temperatures decreasing. However the graph below gives more context to the 
+                        full story, where we can see the section displayed is a small lull in an overall trend of increasing temperatures across
+                        30+ years. 
                     </p>
                 </div>
                 <div className='twoInfoImages' style={{display: techniqueTwoOpen ? 'flex' : 'none'}}>
@@ -148,23 +158,24 @@ const Information = (props) => {
                         onClick={() => setTechniqueThreeOpen(currValue => !currValue)}
                     >
                         <img className='collapseExpand' src={techniqueThreeOpen ? chevronBottom : chevronTop} alt='collapse or expand '/>
-                        <h2>Keep explaining some techniques</h2>
+                        <h2>Stretched or zoomed in scales</h2>
                     </div>
                     <p style={{display: techniqueThreeOpen ? 'block' : 'none'}}>
-                        Probably only need to include ones that users will actually be able to make with the graphs below. Here are the 
-                        techniques we listed in our slides: 
-                    Obfuscated Correlation
-                    Zoomed in scale
-                    Double axis
-                    Omitting outliers
-                    Cherry Picking
-                    Square scaling
-                    Omitting context
-                    Axis breaks
-                    Logarithmic vs Linear
+                        A common way to exagerate a difference between data points is to stretch the scale that they are shown in so that they
+                        appear further appart than they really are. This can also be thought of as zooming in on the y-axis so that a small 
+                        change in value between data points looks like a large difference at first glance. For example, the graph titled 
+                        "If Bush Tax Cuts Expire" has only two data points but still manages to be misleading. It appears that they top tax 
+                        rate would explode becoming four to five times larger than it currently is if the tax cuts do expire. However, if you 
+                        look at the values it would only increase from 35% to 39.6%, which is a difference of only 4.6%. So why does this 
+                        less than 5% difference take up a whole graph? Well the y-axis is to blame. It is stretched to only show between 
+                        34 and 42%, rather than being from 0 to 100, which would give a more accurate portrayal of the change. This form of 
+                        deception can use good data points, but display them so that our brain perceives the difference between them to be 
+                        much larger than it really it. You can create graphs with this same problem by setting custom minimum and maximum 
+                        values for the y-scale in your graph below. Beware graphs that do not begin with a scale at 0, and double check that
+                        the range of values chosen for the scales make sense. 
                     </p>
                 </div>
-                <img className='infoImage' src={badDoubleAxis} alt='Manipulating a Graph'
+                <img className='infoImage' src={stretchedScale} alt='Manipulating a Graph'
                     style={{display: techniqueThreeOpen ? 'block' : 'none', maxHeight: '500px'}} 
                 />
             </section>

@@ -49,7 +49,7 @@ const DynamicGraph = (props) => {
         const firstXAxis = Object.values(props.firstDataset.data.columns)[props.firstDataset.xaxis];
         const firstYAxis = Object.values(props.firstDataset.data.columns)[props.firstDataset.yaxis];
   
-        const firstVals = props.firstDataset.data.map(v=>[v[firstXAxis], v[firstYAxis], false]);
+        const firstVals = props.firstDataset.data.map(v=>[v[firstXAxis], v[firstYAxis] * props.firstScale, false]);
   
         let labels = [];
         for (const v1 of firstVals)
@@ -65,7 +65,7 @@ const DynamicGraph = (props) => {
         // order labels
         labels = labels.sort();
   
-        const firstData = firstVals.filter(v=>labels.includes(v[0])).map(v=>parseFloat(v[1])).splice(0, props.maximumDataPoints);; 
+        const firstData = firstVals.filter(v=>labels.includes(v[0])).map(v=> parseFloat(v[1])).splice(0, props.maximumDataPoints);; 
   
         if (firstData.length === 0 || firstData.includes(NaN))
         {
@@ -90,9 +90,9 @@ const DynamicGraph = (props) => {
         const secondXAxis = Object.values(props.secondDataset.data.columns)[props.secondDataset.xaxis];
         const secondYAxis = Object.values(props.secondDataset.data.columns)[props.secondDataset.yaxis];
   
-        const firstVals = props.firstDataset.data.map(v=>[v[firstXAxis], v[firstYAxis], false]);
+        const firstVals = props.firstDataset.data.map(v=>[v[firstXAxis], v[firstYAxis] * props.firstScale, false]);
         console.log(firstVals);
-        const secondVals = props.secondDataset.data.map(v=>[v[secondXAxis], v[secondYAxis], false]);
+        const secondVals = props.secondDataset.data.map(v=>[v[secondXAxis], v[secondYAxis] * props.secondScale, false]);
   
         let labels = [];
         for (const v1 of firstVals)

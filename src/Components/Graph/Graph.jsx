@@ -28,8 +28,8 @@ const pet_data = await csv(pet_data_url_old);
 // const soccer_data = await csv(soccer_data_url_old);
 
 let datasets = [
-  [noodle_data, "Instant Noodle Sales"],
   [pet_data, "Cat and Dog ownership"],
+  [noodle_data, "Instant Noodle Sales"],
   [soccer_data, "Soccer Stadiums Worldwide"],
   [imdb_data, "Imdb Top Movies"],
 ]
@@ -93,6 +93,10 @@ const Graph = (props) => {
   // state variable for adding to removed values from x axis
   const [removedValues, setRemovedValues] = useState([]);
   const [valueToRemove, setValueToRemove] = useState("");
+
+  // state variable for scale applied to first and second graphs
+  const [firstScale, setFirstScale] = useState(1);
+  const [secondScale, setSecondScale] = useState(1);
 
   const dataSetOptions = datasets.map((ds,i)=>{
     return {
@@ -273,6 +277,7 @@ const preprocess = function(ds, isFirst)
                     <Button>Graph Type: {graphType.label}</Button>
                 </Dropdown>
                 <Input 
+                  addonBefore='Max Number of Data Points:'
                   className='maximum-data-points'
                   type='number'
                   onInput={e=>setMaximumDataPoints( e.target.value < 1 ? 1 : (e.target.value > 40 ? 40 : ~~(e.target.value)))} 
@@ -289,6 +294,13 @@ const preprocess = function(ds, isFirst)
                 <Dropdown menu={{ items: firstDataset.yaxes, onClick: (value => selectYAxis(value, true)) }} placement="bottomLeft">
                     <Button>Y Axes: {firstColumns[firstDataset.yaxis].label}</Button>
                 </Dropdown>
+                <Input 
+                  addonBefore='Scale:'
+                  className='scale-data-points'
+                  type='number'
+                  onInput={e=>setFirstScale( e.target.value < 0.1 ? 0.1 : (e.target.value > 100 ? 100 : (e.target.value)))} 
+                  value={firstScale}
+                />
               </div>
               <div>
                 <Dropdown menu={{ items: dataSetOptionsPlusNone(), onClick: (value => selectDataset(value, false)) }} placement="bottomLeft">
@@ -308,6 +320,14 @@ const preprocess = function(ds, isFirst)
                 >
                     <Button>Y Axes: {secondDataset ? secondColumns[secondDataset.yaxis].label : 'NONE'}</Button>
                 </Dropdown>
+                <Input 
+                  disabled={!secondDataset}  
+                  addonBefore='Scale:'
+                  className='scale-data-points'
+                  type='number'
+                  onInput={e=>setSecondScale( e.target.value < 0.1 ? 0.1 : (e.target.value > 100 ? 100 : (e.target.value)))} 
+                  value={secondScale}
+                />
               </div>
               <div className='scale-and-cherrypicking-modifiers'>
                 <div>
@@ -320,23 +340,26 @@ const preprocess = function(ds, isFirst)
                 <div>
                   <Space direction="vertical">
                     <div><h3>Remove Data Points:</h3></div>
-                    <div className='input-and-button-row'>
-                      <Input 
-                        placeholder="Type Value From X Axis" 
-                        onInput={e=>setValueToRemove(e.target.value)} 
-                        value={valueToRemove}
-                      />
-                      <Button 
-                        disabled={!valueToRemove}
-                        onClick={() => {
-                          const newRemovedValues = removedValues;
-                          newRemovedValues.push(valueToRemove);
-                          setRemovedValues(newRemovedValues);
-                          setValueToRemove("");
-                        }}
-                      >
-                        Remove
-                      </Button>
+                    <div>
+                      Value:
+                      <div className='input-and-button-row'>
+                        <Input 
+                          placeholder="Type Value From X Axis" 
+                          onInput={e=>setValueToRemove(e.target.value)} 
+                          value={valueToRemove}
+                        />
+                        <Button 
+                          disabled={!valueToRemove}
+                          onClick={() => {
+                            const newRemovedValues = removedValues;
+                            newRemovedValues.push(valueToRemove);
+                            setRemovedValues(newRemovedValues);
+                            setValueToRemove("");
+                          }}
+                        >
+                          Remove
+                        </Button>
+                      </div>
                     </div>
                     <div className='removed-datapoints'>
                       { 
@@ -365,6 +388,8 @@ const preprocess = function(ds, isFirst)
                 yScale={yScale}
                 removedValues={removedValues}
                 maximumDataPoints={maximumDataPoints}
+                firstScale={firstScale}
+                secondScale={secondScale}
               />
           </div>
       </div>

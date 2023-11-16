@@ -49,15 +49,14 @@ const DynamicGraph = (props) => {
         const firstXAxis = Object.values(props.firstDataset.data.columns)[props.firstDataset.xaxis];
         const firstYAxis = Object.values(props.firstDataset.data.columns)[props.firstDataset.yaxis];
   
-        const firstVals = props.firstDataset.data.map(v=>[v[firstXAxis], v[firstYAxis] * props.firstScale, false]);
+        const firstVals = props.firstDataset.data.filter(v => !props.removedValues.includes(v[firstXAxis]))
+          .map(v=>[v[firstXAxis], v[firstYAxis] * props.firstScale, false]);
   
         let labels = [];
         for (const v1 of firstVals)
         {
-          if (!props.removedValues.includes(v1[0])) {
-            labels.push(v1[0]);
-            v1[2] = true;
-          }
+          labels.push(v1[0]);
+          v1[2] = true;
         }
   
         // trim labels
@@ -85,13 +84,12 @@ const DynamicGraph = (props) => {
       } else {
         // supply both first and second data sets
         const firstXAxis = Object.values(props.firstDataset.data.columns)[props.firstDataset.xaxis];
-        console.log(firstXAxis);
         const firstYAxis = Object.values(props.firstDataset.data.columns)[props.firstDataset.yaxis];
         const secondXAxis = Object.values(props.secondDataset.data.columns)[props.secondDataset.xaxis];
         const secondYAxis = Object.values(props.secondDataset.data.columns)[props.secondDataset.yaxis];
   
-        const firstVals = props.firstDataset.data.map(v=>[v[firstXAxis], v[firstYAxis] * props.firstScale, false]);
-        console.log(firstVals);
+        const firstVals = props.firstDataset.data.filter(v => !props.removedValues.includes(v[firstXAxis]))
+          .map(v=>[v[firstXAxis], v[firstYAxis] * props.firstScale, false]);
         const secondVals = props.secondDataset.data.map(v=>[v[secondXAxis], v[secondYAxis] * props.secondScale, false]);
   
         let labels = [];
@@ -99,7 +97,7 @@ const DynamicGraph = (props) => {
         {
           for (const v2 of secondVals)
           {
-            if (v1[0] === v2[0] && (!v1[2] && !v2[2]) && !props.removedValues.includes(v1[0]) )
+            if (v1[0] === v2[0] && (!v1[2] && !v2[2]) )
             {
               labels.push(v1[0]);
               v1[2] = true;
@@ -110,14 +108,18 @@ const DynamicGraph = (props) => {
   
         // trim labels
         labels = labels.splice(0, props.maximumDataPoints);
+        // order labels
+        labels = labels.sort((a, b) => a < b);
   
-        const firstData = firstVals.filter(v=>labels.includes(v[0])).map(v=>parseFloat(v[1])).splice(0, props.maximumDataPoints);; 
-        const secondData = secondVals.filter(v=>labels.includes(v[0])).map(v=>parseFloat(v[1])).splice(0, props.maximumDataPoints);; 
+        const firstData = firstVals.filter(v=>labels.includes(v[0])).sort((a, b) => a[0] < b[0]).map(v=>parseFloat(v[1])); 
+        const secondData = secondVals.filter(v=>labels.includes(v[0])).sort((a, b) => a[0] < b[0]).map(v=>parseFloat(v[1])); 
   
         if (firstData.length === 0 || firstData.includes(NaN) || secondData.length === 0 || secondData.includes(NaN))
         {
           error = true;
         }
+
+        
 
         return {
           labels,

@@ -1,7 +1,6 @@
 // we can componetize different kinds of graphs if it makes it easier to pass information in 
 // via props, or the graph component may be able to simply swap between them. this is just 
 // an example graph from chart.js to show something
-import React from 'react';
 import 'chart.js/auto';
 import {
   Chart as ChartJS,
@@ -151,8 +150,7 @@ const DynamicGraph = (props) => {
     // if (isNaN(props.yScale.max))
     // {
     //   options.scales.y.max = Math.max(...[...firstData, ...secondData])
-    // }
-
+    // 
     
     if (error)
     {
@@ -169,7 +167,7 @@ const DynamicGraph = (props) => {
     {
       return (
         <div className='ExampleGraph graphHolder'>
-            <Bar options={options} data={getData()} />
+            <Bar options={options} data={getData()} ref={props.graphRef} />
         </div>
     )
     }
@@ -177,7 +175,7 @@ const DynamicGraph = (props) => {
     {
       return (
         <div className='ExampleGraph graphHolder'>
-            <Pie options={options} data={getData()} />
+            <Pie options={options} data={getData()} ref={props.graphRef} />
         </div>
     )
     }
@@ -185,7 +183,7 @@ const DynamicGraph = (props) => {
     {
       return (
         <div className='ExampleGraph graphHolder'>
-            <Scatter options={options} data={getData()} />
+            <Scatter options={options} data={getData()} ref={props.graphRef} />
         </div>
     )
     }

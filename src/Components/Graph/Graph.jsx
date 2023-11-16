@@ -1,6 +1,6 @@
 import { Button, Dropdown, Space, Input } from 'antd';
 import './Graph.scss';
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import DynamicGraph from './DynamicGraph';
 import xmark from '../../Assets/Site/xmark.svg';
 
@@ -62,6 +62,8 @@ for (let i in datasets)
 // data sets and different graphs (displaying what the user has selected). Holds state for
 // selections users have made for the graph
 const Graph = (props) => {
+
+  const graphRef = useRef(null);
 
   // const dataSetOptions = [
   //     {
@@ -263,6 +265,19 @@ const preprocess = function(ds, isFirst)
       return {key: i.toString(), label: v};
     })
   
+    
+    // handle saving graph
+    const clickSave = (type) => {
+      const link = document.createElement('a');
+      if (type && type === 'jpeg') {
+        link.download = "misleading-graph.jpeg";
+        link.href = graphRef.current.toBase64Image('image/jpeg', 1);
+      } else {
+        link.download = "misleading-graph.png";
+        link.href = graphRef.current.toBase64Image();
+      }
+      link.click();
+    }
 
   return (
       <div className='Graph' id='graph'>
@@ -390,7 +405,20 @@ const preprocess = function(ds, isFirst)
                 maximumDataPoints={maximumDataPoints}
                 firstScale={firstScale}
                 secondScale={secondScale}
+                graphRef={graphRef}
               />
+          </div>
+          <br />
+          <div className='save-button-holder'>
+            <p>
+              Save Graph as:
+            </p>
+            <Button
+              onClick={() => clickSave("jpeg")}
+            >.jpeg</Button>
+            <Button
+              onClick={() => clickSave()}
+            >.png</Button>
           </div>
       </div>
   )

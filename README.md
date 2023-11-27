@@ -1,6 +1,16 @@
 # Misleading-Graphs-Frontend
 A Front-End for the Misleading Graphs Web Application. This application serves to help educate people about way data can be manipulated and misrepresented in graphs through interactive examples.
 
+## Deployment:
+
+Deployed using Microsoft Azure and available at https://misleading-graphs.azurewebsites.net/
+(Because the free tier is used when accessing the site it may be slow initially as resources are shared)
+To update deployed files run 'npm run build', then zip everything in the build folder.
+Navigate to https://misleading-graphs.scm.azurewebsites.net/DebugConsole 
+then select 'site' and then 'wwwroot' now with a browser open on this screen
+drag the zipped file from a file explorer window over the right side of the debug console 
+until promped to copy the contents and override all existing files. 
+
 ## Tools in Use
 
 Using material component for improved design from https://ant.design/

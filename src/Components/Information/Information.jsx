@@ -1,12 +1,12 @@
 import './Information.scss';
 import proliferation from '../../Assets/Site/misleading-graph-proliferation.jpg';
-import socialMedia from '../../Assets/Site/socialMediaNews.webp';
+import socialMedia from '../../Assets/Site/socialMediaNews.jpeg';
 import grabPieChart from '../../Assets/Site/grabbing-pie-chart.svg';
 import sharkVsIcecream from '../../Assets/Examples/icecreamVsSharks2.png';
 // import badDoubleAxis from '../../Assets/Examples/drowningVsMarriage.png';
 import stretchedScale from '../../Assets/Examples/Bush-cuts-stretched-scale.png';
-import cherryPicked from '../../Assets/Examples/cherryPickedCooling.webp';
-import nonCherryPicked from '../../Assets/Examples/NotCherryPickedWarming.webp';
+import cherryPicked from '../../Assets/Examples/cherryPickedCooling.jpeg';
+import nonCherryPicked from '../../Assets/Examples/NotCherryPickedWarming.jpeg';
 import chevronTop from '../../Assets/Site/chevron-top.svg';
 import chevronBottom from '../../Assets/Site/chevron-bottom.svg';
 import { useState } from 'react';

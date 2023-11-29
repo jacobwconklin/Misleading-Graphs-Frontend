@@ -11,11 +11,15 @@ import {csv} from "d3";
 import pet_data_url_old from "../../Assets/Datasets/Old/pet-ownership-uk.csv";
 // import soccer_data_url_old from "../../Assets/Datasets/Old/number-visitors-japan-dome.csv";
 
-
 import noodle_data_url from "../../Assets/Datasets/noodles.csv";
 // import pet_data_url from "../../Assets/Datasets/cats_vs_dogs.csv";
 import soccer_data_url from "../../Assets/Datasets/Football Stadiums.csv";
 import imdb_data_url from "../../Assets/Datasets/imdb_top_1000.csv";
+
+//Added by willmcc
+import icecream_data_url from "../../Assets/Datasets/IceCreamSalesandTemperature.csv"
+import graph_going_up_url from "../../Assets/Datasets/graphsgoingup.csv"
+import social_media_use_url from "../../Assets/Datasets/socialmediause.csv"
 // import ufo_data_url from "../../Assets/Datasets/ufo-sightings-transformed.csv";
 
 const noodle_data = await csv(noodle_data_url);
@@ -27,11 +31,19 @@ const imdb_data = await csv(imdb_data_url);
 const pet_data = await csv(pet_data_url_old);
 // const soccer_data = await csv(soccer_data_url_old);
 
+//Added By WillMcC
+const icecream_data = await csv(icecream_data_url);
+const graph_going_data = await csv(graph_going_up_url);
+const social_media_use = await csv(social_media_use_url);
+
 let datasets = [
   [pet_data, "Cat and Dog ownership"],
   [noodle_data, "Instant Noodle Sales"],
   [soccer_data, "Soccer Stadiums Worldwide"],
   [imdb_data, "Imdb Top Movies"],
+  [icecream_data, "Ice Cream and Temperature"],
+  [graph_going_data, "Graph Going Up"],
+  [social_media_use, "Social Media Usage"]
 ]
 
 // Preprocess datasets

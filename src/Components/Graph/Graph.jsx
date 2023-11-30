@@ -77,30 +77,6 @@ const Graph = (props) => {
 
   const graphRef = useRef(null);
 
-  // const dataSetOptions = [
-  //     {
-  //       key: '1',
-  //       label: "Instant Noodle Sales",
-  //       data: noodle_data,
-  //       xaxis: 0,
-  //       yaxis: 1
-  //     },
-  //     {
-  //       key: '2',
-  //       label: "Cat and Dog ownership",
-  //       data: pet_data,
-  //       xaxis: 0,
-  //       yaxis: 1
-  //     },
-  //     {
-  //       key: '3',
-  //       label: "Soccer Stadiums Worldwide",
-  //       data: soccer_data,
-  //       xaxis: 0,
-  //       yaxis: 1
-  //     },
-  // ];
-
   // state variable for maximum number of datapoints to display
   const [maximumDataPoints, setMaximumDataPoints] = useState(15);
 
@@ -360,8 +336,8 @@ const preprocess = function(ds, isFirst)
                 <div>
                   <Space direction="vertical">
                     <div><h3>Custom Y Scale:</h3></div>
-                    <div>Min: <Input placeholder="Leave Blank for Default" onInput={e=>setYScaleHelper(e.target.value, true)} /></div>
-                    <div>Max: <Input placeholder="Leave Blank for Default" onInput={e=>setYScaleHelper(e.target.value, false)} /></div>
+                    <div>Min:&nbsp; <Input placeholder="Leave Blank for Default" className='MinMaxInput' onInput={e=>setYScaleHelper(e.target.value, true)} /></div>
+                    <div>Max: <Input placeholder="Leave Blank for Default" className='MinMaxInput' onInput={e=>setYScaleHelper(e.target.value, false)} /></div>
                   </Space>
                 </div>
                 <div>

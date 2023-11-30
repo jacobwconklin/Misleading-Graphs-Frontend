@@ -13,7 +13,7 @@
     z-index: 1;
 
     .logoHolder {
-        width: 170px;
+        width: 100px;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -30,7 +30,7 @@
     }
 
     .actions {
-        width: 170px;
+        width: 100px;
         display: flex;
         align-items: center;
         text-wrap: wrap;
@@ -49,3 +49,19 @@
     }
 
 }
+
+@media only screen and (max-width: 600px) {
+
+    .SiteHeader {
+
+        justify-content: center;
+
+        .logoHolder {
+            display: none;
+        }
+    
+        .actions {
+            display: none;
+        }
+    }
+  }

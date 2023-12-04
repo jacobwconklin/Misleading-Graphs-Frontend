@@ -10,6 +10,7 @@ import nonCherryPicked from '../../Assets/Examples/NotCherryPickedWarming.jpeg';
 import chevronTop from '../../Assets/Site/chevron-top.svg';
 import chevronBottom from '../../Assets/Site/chevron-bottom.svg';
 import { useState } from 'react';
+import { Button } from 'antd';
 
 // Information component contains examples and techniques about making misleading graphs.
 // this will prepare the user to implement these techniques in making their own 
@@ -26,6 +27,13 @@ const Information = (props) => {
 
     return (
         <div className='Information'>
+            <Button
+                onClick={() => {
+                    document.getElementById("graph").scrollIntoView({ block: 'end',  behavior: 'smooth' });
+                }}
+            >
+                Jump to Graph
+            </Button>
             <h1>What are misleading graphs?</h1>
             <section className='infoSection'>
                 <div className='infoText'>

@@ -4,6 +4,10 @@
 
     .ant-input-group-addon {
         background-color: white;
+
+        &:disabled {
+            background-color: gray;
+        }
     }
 
     p {
@@ -39,8 +43,8 @@
         align-items: center;
         justify-content: flex-start;
         max-width: 100%;
-        max-height: 60vh;
-        height: 60vh;
+        max-height: 50vh;
+        height: 50vh;
     }
 
     .scale-and-cherrypicking-modifiers {
@@ -49,7 +53,7 @@
         flex-wrap: wrap;
 
         .MinMaxInput {
-            width: 13em;
+            width: 16em;
         }
     }
 
@@ -88,7 +92,7 @@
     }
 
     .maximum-data-points {
-        max-width: 300px;
+        max-width: 280px;
     }
 
     .scale-data-points {

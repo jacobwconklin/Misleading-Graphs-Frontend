@@ -7,43 +7,51 @@ import xmark from '../../Assets/Site/xmark.svg';
 // For datasets
 import {csv} from "d3";
 
-// import noodle_data_url_old from "../../Assets/Datasets/Old/instant-noodle-demand.csv";
+import noodle_data_url_old from "../../Assets/Datasets/Old/instant-noodle-demand.csv";
 import pet_data_url_old from "../../Assets/Datasets/Old/pet-ownership-uk.csv";
-// import soccer_data_url_old from "../../Assets/Datasets/Old/number-visitors-japan-dome.csv";
+import whale_data_url from "../../Assets/Datasets/BeachedWhales.csv";
+//import soccer_data_url_old from "../../Assets/Datasets/Old/number-visitors-japan-dome.csv";
 
-import noodle_data_url from "../../Assets/Datasets/noodles.csv";
 // import pet_data_url from "../../Assets/Datasets/cats_vs_dogs.csv";
 import soccer_data_url from "../../Assets/Datasets/Football Stadiums.csv";
 import imdb_data_url from "../../Assets/Datasets/imdb_top_1000.csv";
 
 //Added by willmcc
-import icecream_data_url from "../../Assets/Datasets/IceCreamSalesandTemperature.csv"
-import graph_going_up_url from "../../Assets/Datasets/graphsgoingup.csv"
-import social_media_use_url from "../../Assets/Datasets/socialmediause.csv"
-// import ufo_data_url from "../../Assets/Datasets/ufo-sightings-transformed.csv";
+import icecream_data_url from "../../Assets/Datasets/IceCreamSalesByMonth.csv";
+import ufo_data_url from "../../Assets/Datasets/Generated_ufo.csv";
 
-const noodle_data = await csv(noodle_data_url);
+import allergy_data_url from "../../Assets/Datasets/AllergiesByMonth.csv";
+import cadbury_data_url from "../../Assets/Datasets/CadburyEggSalesByMonth.csv";
+import mittens_data_url from "../../Assets/Datasets/MittenSalesByMonth.csv";
+
+const noodle_data = await csv(noodle_data_url_old);
 //const pet_data = await csv(pet_data_url);
 const soccer_data = await csv(soccer_data_url);
+const whale_data = await csv(whale_data_url);
 const imdb_data = await csv(imdb_data_url);
-// const ufo_data = await csv(ufo_data_url);
+const ufo_data = await csv(ufo_data_url);
 // const noodle_data = await csv(noodle_data_url_old);
 const pet_data = await csv(pet_data_url_old);
 // const soccer_data = await csv(soccer_data_url_old);
+const mittens_data = await csv(mittens_data_url);
+const allergy_data = await csv(allergy_data_url);
+const cadbury_data = await csv(cadbury_data_url);
 
 //Added By WillMcC
 const icecream_data = await csv(icecream_data_url);
-const graph_going_data = await csv(graph_going_up_url);
-const social_media_use = await csv(social_media_use_url);
+
 
 let datasets = [
-  [pet_data, "Cat and Dog ownership"],
+  [pet_data, "Cat and Dog Owners"],
   [noodle_data, "Instant Noodle Sales"],
-  [soccer_data, "Soccer Stadiums Worldwide"],
-  [imdb_data, "Imdb Top Movies"],
-  [icecream_data, "Ice Cream and Temperature"],
-  [graph_going_data, "Graph Going Up"],
-  [social_media_use, "Social Media Usage"]
+  [ufo_data, "Ufo Sightings"],
+  [whale_data, "Beached Whales"],
+  [icecream_data, "Ice Cream Sales, USA"],
+  [mittens_data, "Mitten Sales, USA"],
+  [allergy_data, "Allergies Reported"],
+  [cadbury_data, "Candy Egg Sales"],
+  [soccer_data, "Soccer Stadiums"],
+  [imdb_data, "IMDB Data"]
 ]
 
 // Preprocess datasets
@@ -74,11 +82,12 @@ for (let i in datasets)
 // data sets and different graphs (displaying what the user has selected). Holds state for
 // selections users have made for the graph
 const Graph = (props) => {
+  // const [selectedDataSets, setSelectedDatasets] = useState(datasets);
 
   const graphRef = useRef(null);
 
   // state variable for maximum number of datapoints to display
-  const [maximumDataPoints, setMaximumDataPoints] = useState(15);
+  const [maximumDataPoints, setMaximumDataPoints] = useState(12);
 
   // state variable for adding to removed values from x axis
   const [removedValues, setRemovedValues] = useState([]);
@@ -88,7 +97,7 @@ const Graph = (props) => {
   const [firstScale, setFirstScale] = useState(1);
   const [secondScale, setSecondScale] = useState(1);
 
-  const dataSetOptions = datasets.map((ds,i)=>{
+  let dataSetOptions = datasets.map((ds,i)=>{
     return {
       key: `${i+1}`,
       label: ds[1],
@@ -108,8 +117,10 @@ const Graph = (props) => {
 const preprocess = function(ds, isFirst)
 {
   // Only include numeric y axes
+  // try to set yaxis to LAST numeric value (if it exists)
+  // so that it isn't the same value as the x-axis immediately when possible
   let dsYAxes = [];
-  let firstNumericY = -1;
+  let lastNumericY = -1;
   let i = 0;
   for (let data of ds.data.columns)
   {
@@ -120,10 +131,7 @@ const preprocess = function(ds, isFirst)
         label: data
       });
 
-      if (firstNumericY === -1)
-      {
-        firstNumericY = i;
-      }
+      lastNumericY = i;
 
     }
     i++;
@@ -131,7 +139,7 @@ const preprocess = function(ds, isFirst)
 
   const dataset = {...ds};
   dataset.yaxes = dsYAxes;
-  dataset.yaxis = firstNumericY;
+  dataset.yaxis = lastNumericY;
   return dataset;
 }
 
@@ -144,15 +152,18 @@ const preprocess = function(ds, isFirst)
     //   (isFirst ? "first" : "second" ) + " dataset.");
     if (isFirst)
     {
+      setFirstScale(1);
       setFirstDataset(preprocess(dataSetOptionsPlusNone().find(set => set.key === key), true));
     }
     else if (key === '0') 
     {
       // user selected 'NONE' as their second database no processesing work needed
+      setSecondScale(1);
       setSecondDataset(null);
     }
     else
     {
+      setSecondScale(1);
       setSecondDataset(preprocess(dataSetOptionsPlusNone().find(set => set.key === key), true));
     }
 
@@ -226,8 +237,40 @@ const preprocess = function(ds, isFirst)
     setGraphType(graphTypes.find(graph => graph.key === key))
   }
 
+  // const datasetCategories = [
+  //   {
+  //     key: '0',
+  //     label: "By Year"
+  //   },
+  //   {
+  //     key: '1',
+  //     label: "By Month"
+  //   },
+  //   {
+  //     key: '2',
+  //     label: "All"
+  //   },
+  // ];
+
+  // // handle user choosing a dataset category
+  // const selectDatasetCategory = ({ key }) => {
+  //   // set usable datasets
+  //   dataSetOptions = datasets.slice(0, 4).map((ds,i)=>{
+  //     return {
+  //       key: `${i+1}`,
+  //       label: ds[1],
+  //       data: ds[0],
+  //       xaxis: 0,
+  //       yaxis: 1,
+  //       yaxes: []
+  //     }
+  //   });
+  //   setDatasetCategory(datasetCategories.find(set => set.key === key).label);
+  // }
+
     // State
     const [graphType, setGraphType] = React.useState(graphTypes[0]);
+    // const [datasetCategory, setDatasetCategory] = useState(dataSetOptions[0].label);
     const [firstDataset, setFirstDataset] = React.useState(preprocess(dataSetOptions[0]));
     const [secondDataset, setSecondDataset] = React.useState(null);
     const [yScale, setYScale] = React.useState({min: NaN, max: NaN});
@@ -279,72 +322,96 @@ const preprocess = function(ds, isFirst)
                 <Dropdown menu={{ items: graphTypes, onClick: selectGraphType }} placement="bottomLeft">
                     <Button>Graph Type: {graphType.label}</Button>
                 </Dropdown>
-                <Input 
-                  addonBefore='Max Number of Data Points:'
-                  className='maximum-data-points'
-                  type='number'
-                  onInput={e=>setMaximumDataPoints( e.target.value < 1 ? 1 : (e.target.value > 40 ? 40 : ~~(e.target.value)))} 
-                  value={maximumDataPoints}
-                />
+                {/* <Dropdown menu={{ items: datasetCategories, onClick: selectDatasetCategory }} placement="bottomLeft">
+                    <Button>Dataset Category: {datasetCategory.label}</Button>
+                </Dropdown> */}
               </div>
               <div>
                 <Dropdown menu={{ items: dataSetOptions, onClick: (value => selectDataset(value, true)) }} placement="bottomLeft">
-                    <Button>First Dataset: {firstDataset.label}</Button>
+                    <Button >Dataset #1: {firstDataset.label}</Button>
                 </Dropdown>
                 <Dropdown menu={{ items: firstColumns, onClick: ((value,i) => selectXAxis(value, true)) }} placement="bottomLeft">
-                    <Button>X Axes: {firstColumns[firstDataset.xaxis].label}</Button>
+                    <Button>X Axis: {firstColumns[firstDataset.xaxis].label}</Button>
                 </Dropdown>
                 <Dropdown menu={{ items: firstDataset.yaxes, onClick: (value => selectYAxis(value, true)) }} placement="bottomLeft">
-                    <Button>Y Axes: {firstColumns[firstDataset.yaxis].label}</Button>
+                    <Button>Y Axis: {firstColumns[firstDataset.yaxis].label}</Button>
                 </Dropdown>
                 <Input 
                   addonBefore='Scale:'
                   className='scale-data-points'
                   type='number'
-                  onInput={e=>setFirstScale( e.target.value < 0.1 ? 0.1 : (e.target.value > 100 ? 100 : (e.target.value)))} 
+                  onInput={e=>setFirstScale( e.target.value < 0.001 ? 0.001 : (e.target.value > 100 ? 100 : (e.target.value)))} 
                   value={firstScale}
                 />
               </div>
               <div>
                 <Dropdown menu={{ items: dataSetOptionsPlusNone(), onClick: (value => selectDataset(value, false)) }} placement="bottomLeft">
-                    <Button>Second Dataset: {secondDataset ? secondDataset.label : 'NONE'}</Button>
+                    <Button>Dataset #2: {secondDataset ? secondDataset.label : 'NONE'}</Button>
                 </Dropdown>
-                <Dropdown 
-                  menu={{ items: secondColumns, onClick: (value => selectXAxis(value, false)) }} 
-                  placement="bottomLeft"
-                  disabled={!secondDataset}  
-                >
-                    <Button>X Axes: {secondDataset ? secondColumns[secondDataset.xaxis].label : 'NONE'}</Button>
-                </Dropdown>
-                <Dropdown 
-                  menu={{ items: secondDataset? secondDataset.yaxes : [], onClick: (value => selectYAxis(value, false)) }} 
-                  placement="bottomLeft"
-                  disabled={!secondDataset}  
-                >
-                    <Button>Y Axes: {secondDataset ? secondColumns[secondDataset.yaxis].label : 'NONE'}</Button>
-                </Dropdown>
-                <Input 
-                  disabled={!secondDataset}  
-                  addonBefore='Scale:'
-                  className='scale-data-points'
-                  type='number'
-                  onInput={e=>setSecondScale( e.target.value < 0.1 ? 0.1 : (e.target.value > 100 ? 100 : (e.target.value)))} 
-                  value={secondScale}
-                />
+                {
+                  secondDataset &&
+                  <Dropdown 
+                    menu={{ items: secondColumns, onClick: (value => selectXAxis(value, false)) }} 
+                    placement="bottomLeft"
+                    disabled={!secondDataset}  
+                  >
+                      <Button>X Axis: {secondDataset ? secondColumns[secondDataset.xaxis].label : 'NONE'}</Button>
+                  </Dropdown>
+                }
+                {
+                  secondDataset &&
+                  <Dropdown 
+                    menu={{ items: secondDataset? secondDataset.yaxes : [], onClick: (value => selectYAxis(value, false)) }} 
+                    placement="bottomLeft"
+                    disabled={!secondDataset}  
+                  >
+                      <Button>Y Axis: {secondDataset ? secondColumns[secondDataset.yaxis].label : 'NONE'}</Button>
+                  </Dropdown>
+                }
+                {
+                  secondDataset && 
+                  <Input 
+                    addonBefore='Scale:'
+                    className='scale-data-points'
+                    type='number'
+                    onInput={e=>setSecondScale( e.target.value < 0.001 ? 0.001 : (e.target.value > 100 ? 100 : (e.target.value)))} 
+                    value={secondScale}
+                  />
+                }
               </div>
               <div className='scale-and-cherrypicking-modifiers'>
                 <div>
                   <Space direction="vertical">
                     <div><h3>Custom Y Scale:</h3></div>
-                    <div>Min:&nbsp; <Input placeholder="Leave Blank for Default" className='MinMaxInput' onInput={e=>setYScaleHelper(e.target.value, true)} /></div>
-                    <div>Max: <Input placeholder="Leave Blank for Default" className='MinMaxInput' onInput={e=>setYScaleHelper(e.target.value, false)} /></div>
+                    <div>
+                      <Input 
+                        addonBefore='Min: ' 
+                        placeholder="Leave Blank for Default" 
+                        className='MinMaxInput' 
+                        onInput={e=>setYScaleHelper(e.target.value, true)} 
+                      />
+                    </div>
+                    <div>
+                      <Input 
+                        addonBefore="Max:"
+                        placeholder="Leave Blank for Default" 
+                        className='MinMaxInput' 
+                        onInput={e=>setYScaleHelper(e.target.value, false)} 
+                      />
+                    </div>
                   </Space>
                 </div>
                 <div>
                   <Space direction="vertical">
                     <div><h3>Remove Data Points:</h3></div>
+                    <Input 
+                      addonBefore='Max Number of Data Points:'
+                      className='maximum-data-points'
+                      type='number'
+                      onInput={e=>setMaximumDataPoints( e.target.value < 1 ? 1 : (e.target.value > 40 ? 40 : ~~(e.target.value)))} 
+                      value={maximumDataPoints}
+                    />
                     <div>
-                      Value:
                       <div className='input-and-button-row'>
                         <Input 
                           placeholder="Type Value From X Axis" 

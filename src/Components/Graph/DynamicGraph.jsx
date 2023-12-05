@@ -60,8 +60,6 @@ const DynamicGraph = (props) => {
   
         // trim labels
         labels = labels.splice(0, props.maximumDataPoints);
-        // order labels
-        labels = labels.sort();
   
         const firstData = firstVals.filter(v=>labels.includes(v[0])).map(v=> parseFloat(v[1])).splice(0, props.maximumDataPoints);; 
   
@@ -107,11 +105,9 @@ const DynamicGraph = (props) => {
   
         // trim labels
         labels = labels.splice(0, props.maximumDataPoints);
-        // order labels
-        labels = labels.sort((a, b) => a < b);
   
-        const firstData = firstVals.filter(v=>labels.includes(v[0])).sort((a, b) => a[0] < b[0]).map(v=>parseFloat(v[1])); 
-        const secondData = secondVals.filter(v=>labels.includes(v[0])).sort((a, b) => a[0] < b[0]).map(v=>parseFloat(v[1])); 
+        const firstData = firstVals.filter(v=>labels.includes(v[0])).map(v=>parseFloat(v[1])); 
+        const secondData = secondVals.filter(v=>labels.includes(v[0])).map(v=>parseFloat(v[1])); 
   
         if (firstData.length === 0 || firstData.includes(NaN) || secondData.length === 0 || secondData.includes(NaN))
         {

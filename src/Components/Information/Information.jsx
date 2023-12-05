@@ -99,7 +99,9 @@ const Information = (props) => {
                         scientists. 
                         Learning to check graphs for blatant misinformation is a protection 
                         against being manipulated. Creating such graphs for yourself will help drive home these techniques so you know how to 
-                        spot them immediately the next time they come up. Have fun and share your learning to help fight misinformation.
+                        spot them immediately the next time they come up. Have fun and share your learning to help fight misinformation. This website
+                        provides harmless datasets from both actual data collected and generated data so that the graphs you can create are not propagating
+                        dangerous misinformation, but are instead fun ways to learn and share your new knowledge with friends. 
                     </p>
                 </div>
                 <img className='infoImage' src={grabPieChart} alt='Manipulating a Graph' 

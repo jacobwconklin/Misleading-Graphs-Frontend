@@ -97,7 +97,7 @@ const Graph = (props) => {
   const [firstScale, setFirstScale] = useState(1);
   const [secondScale, setSecondScale] = useState(1);
 
-  let dataSetOptions = datasets.map((ds,i)=>{
+  const [dataSetOptions, setDataSetOptions] = useState(datasets.slice(0, 4).map((ds,i)=>{
     return {
       key: `${i+1}`,
       label: ds[1],
@@ -106,7 +106,7 @@ const Graph = (props) => {
       yaxis: 1,
       yaxes: []
     }
-  })
+  }));
 
 
   const dataSetOptionsPlusNone = () => {
@@ -237,40 +237,73 @@ const preprocess = function(ds, isFirst)
     setGraphType(graphTypes.find(graph => graph.key === key))
   }
 
-  // const datasetCategories = [
-  //   {
-  //     key: '0',
-  //     label: "By Year"
-  //   },
-  //   {
-  //     key: '1',
-  //     label: "By Month"
-  //   },
-  //   {
-  //     key: '2',
-  //     label: "All"
-  //   },
-  // ];
+  const datasetCategories = [
+    {
+      key: '0',
+      label: "By Year"
+    },
+    {
+      key: '1',
+      label: "By Month"
+    },
+    {
+      key: '2',
+      label: "All"
+    },
+  ];
 
-  // // handle user choosing a dataset category
-  // const selectDatasetCategory = ({ key }) => {
-  //   // set usable datasets
-  //   dataSetOptions = datasets.slice(0, 4).map((ds,i)=>{
-  //     return {
-  //       key: `${i+1}`,
-  //       label: ds[1],
-  //       data: ds[0],
-  //       xaxis: 0,
-  //       yaxis: 1,
-  //       yaxes: []
-  //     }
-  //   });
-  //   setDatasetCategory(datasetCategories.find(set => set.key === key).label);
-  // }
+  // handle user choosing a dataset category
+  const selectDatasetCategory = ({ key }) => {
+    // set usable datasets
+    if (key === '0') {
+      // By Year
+      const newDataOptions = datasets.slice(0, 4).map((ds,i)=>{
+        return {
+          key: `${i+1}`,
+          label: ds[1],
+          data: ds[0],
+          xaxis: 0,
+          yaxis: 1,
+          yaxes: []
+        }
+      });
+      setDataSetOptions(newDataOptions);
+      setFirstDataset(preprocess(newDataOptions[0]));
+      setSecondDataset(null);
+    } else if (key === '1') {
+      // By Month
+      const newDataOptions = datasets.slice(4, 8).map((ds,i)=>{
+        return {
+          key: `${i+1}`,
+          label: ds[1],
+          data: ds[0],
+          xaxis: 0,
+          yaxis: 1,
+          yaxes: []
+        }
+      });
+      setDataSetOptions(newDataOptions);
+      setFirstDataset(preprocess(newDataOptions[0]));
+      setSecondDataset(null);
+    } else {
+      // All
+      setDataSetOptions(datasets.map((ds,i)=>{
+        return {
+          key: `${i+1}`,
+          label: ds[1],
+          data: ds[0],
+          xaxis: 0,
+          yaxis: 1,
+          yaxes: []
+        }
+      }));
+    }
+    setDatasetCategory(datasetCategories.find(set => set.key === key).label);
+  }
 
     // State
     const [graphType, setGraphType] = React.useState(graphTypes[0]);
-    // const [datasetCategory, setDatasetCategory] = useState(dataSetOptions[0].label);
+    const [datasetCategory, setDatasetCategory] = useState(datasetCategories[0].label);
     const [firstDataset, setFirstDataset] = React.useState(preprocess(dataSetOptions[0]));
     const [secondDataset, setSecondDataset] = React.useState(null);
     const [yScale, setYScale] = React.useState({min: NaN, max: NaN});
@@ -322,20 +355,26 @@ const preprocess = function(ds, isFirst)
                 <Dropdown menu={{ items: graphTypes, onClick: selectGraphType }} placement="bottomLeft">
                     <Button>Graph Type: {graphType.label}</Button>
                 </Dropdown>
-                {/* <Dropdown menu={{ items: datasetCategories, onClick: selectDatasetCategory }} placement="bottomLeft">
-                    <Button>Dataset Category: {datasetCategory.label}</Button>
-                </Dropdown> */}
+                <Dropdown menu={{ items: datasetCategories, onClick: selectDatasetCategory }} placement="bottomLeft">
+                    <Button>Dataset Category: {datasetCategory}</Button>
+                </Dropdown> 
               </div>
               <div>
                 <Dropdown menu={{ items: dataSetOptions, onClick: (value => selectDataset(value, true)) }} placement="bottomLeft">
                     <Button >Dataset #1: {firstDataset.label}</Button>
                 </Dropdown>
-                <Dropdown menu={{ items: firstColumns, onClick: ((value,i) => selectXAxis(value, true)) }} placement="bottomLeft">
-                    <Button>X Axis: {firstColumns[firstDataset.xaxis].label}</Button>
-                </Dropdown>
-                <Dropdown menu={{ items: firstDataset.yaxes, onClick: (value => selectYAxis(value, true)) }} placement="bottomLeft">
-                    <Button>Y Axis: {firstColumns[firstDataset.yaxis].label}</Button>
-                </Dropdown>
+                {
+                  datasetCategory === 'All' && 
+                  <Dropdown menu={{ items: firstColumns, onClick: ((value,i) => selectXAxis(value, true)) }} placement="bottomLeft">
+                      <Button>X Axis: {firstColumns[firstDataset.xaxis].label}</Button>
+                  </Dropdown>
+                }
+                {
+                  datasetCategory === 'All' &&
+                  <Dropdown menu={{ items: firstDataset.yaxes, onClick: (value => selectYAxis(value, true)) }} placement="bottomLeft">
+                      <Button>Y Axis: {firstColumns[firstDataset.yaxis].label}</Button>
+                  </Dropdown>
+                }
                 <Input 
                   addonBefore='Scale:'
                   className='scale-data-points'
@@ -349,7 +388,7 @@ const preprocess = function(ds, isFirst)
                     <Button>Dataset #2: {secondDataset ? secondDataset.label : 'NONE'}</Button>
                 </Dropdown>
                 {
-                  secondDataset &&
+                  secondDataset && datasetCategory === 'All' &&
                   <Dropdown 
                     menu={{ items: secondColumns, onClick: (value => selectXAxis(value, false)) }} 
                     placement="bottomLeft"
@@ -359,7 +398,7 @@ const preprocess = function(ds, isFirst)
                   </Dropdown>
                 }
                 {
-                  secondDataset &&
+                  secondDataset && datasetCategory === 'All' &&
                   <Dropdown 
                     menu={{ items: secondDataset? secondDataset.yaxes : [], onClick: (value => selectYAxis(value, false)) }} 
                     placement="bottomLeft"
